@@ -3,38 +3,44 @@
  */
 public class Node {
     private Node root;
-    private int data;
+    private String data;
     private Node left;
     private Node right;
 
-    public void Node()
-    {
+    public Node() {
         root = null;
     }
 
-    public void insert(int data) {
+    public void insert(String[] data) {
         root = insert(root, data);
     }
 
-    private Node insert(Node current, int data) {
-        if (current == null) {
+    private Node insert(Node current, String[] data)
+    {
+        if (current == null || (data[2] == "0" && data[3] == "0"))
+        {
             current = new Node();
-            current.setData(data);
+            current.setData(data[1]);
             current.setLeft(null);
             current.setRight(null);
-        } else if (data < current.getData()) {
-            current.setLeft(insert(current.getLeft(), data));
-        } else {
+        }
+        else if (data[2] == "0" && data[3] != "0")
             current.setRight(insert(current.getRight(), data));
+        else if (data[2] != "0" && data[3] == "0")
+            current.setLeft(insert(current.getLeft(), data));
+        else if (data[2] != "0" && data[3] != "0")
+        {
+            current.setRight(insert(current.getRight(), data));
+            current.setRight(insert(current.getLeft(), data));
         }
         return current;
     }
 
-    public int getData() {
+    public String getData() {
         return this.data;
     }
 
-    public void setData(int data) {
+    public void setData(String data) {
         this.data = data;
     }
 
