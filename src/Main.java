@@ -21,7 +21,9 @@ public class Main {
             while ((inputString = reader.readLine()) != null)
             {
                 String[] subStrings = inputString.split("\t");
-                nodeItem.insert(subStrings);
+
+                if (subStrings.length == 4)
+                    nodeItem.insert(subStrings);
             }
         }
         catch (Exception e)
