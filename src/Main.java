@@ -4,7 +4,8 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Main {
+public class Main
+{
 
     private static Node nodeItem = new Node();
 

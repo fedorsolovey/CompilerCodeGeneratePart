@@ -24,25 +24,20 @@ public class Node {
 
     private Node insert(Node current, String[] data)
     {
-        if (data.length < 4)
-            System.out.println("WTAF" + data[0]);
-
-        if (current == null || (data[2] == "0" && data[3] == "0"))
+        if (current == null || (data[3].equals("0") && data[2].equals("0")))
         {
             current = new Node();
             current.setData(data[1]);
             current.setLeft(null);
             current.setRight(null);
         }
-        else if (data[3] != "0")
-            current.setRight(insert(current.getRight(), data));
-        else if (data[2] != "0")
-            current.setLeft(insert(current.getLeft(), data));
-//        else if (data[2] != "0" && data[3] != "0")
-//        {
-//            current.setRight(insert(current.getRight(), data));
-//            current.setLeft(insert(current.getLeft(), data));
-//        }
+        else
+        {
+            if (!data[3].equals("0"))
+                current.setRight(insert(current.getRight(), data));
+            if (!data[2].equals("0"))
+                current.setLeft(insert(current.getLeft(), data));
+        }
         return current;
     }
 
