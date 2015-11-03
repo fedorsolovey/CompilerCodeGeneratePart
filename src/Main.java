@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class Main
 {
 
-    private static Node nodeItem = new Node();
+//    private Node nodeItem;
 
     public static void main(String[] args)
     {
@@ -33,13 +33,13 @@ public class Main
                 }
             }
 
-            nodeItem.createTree(arrayList);
+            Node nodeItem = Node.createTree(arrayList);
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
 
-        nodeItem.traverseTree(Node.TraverseType.INORDER);
+//        nodeItem.traverseTree(Node.TraverseType.INORDER);
     }
 }

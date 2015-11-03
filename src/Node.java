@@ -16,17 +16,17 @@ public class Node {
     }
 
     public Node() {
-        root = null;
+
     }
 
     //вставка
-    public Node createTree(ArrayList<Object> data)
+    public static Node createTree(ArrayList<Object> data)
     {
         String[] stringArray = (String[]) data.get(0);
         return insert(stringArray[0], data);
     }
 
-    private Node insert(String rootAddress, ArrayList<Object> data)
+    private static Node insert(String rootAddress, ArrayList<Object> data)
     {
         String[] current_line = findLine(rootAddress, data);
         if (current_line == null)
@@ -46,7 +46,7 @@ public class Node {
         return nodeItem;
     }
 
-    private String[] findLine(String address, ArrayList<Object> data)
+    private static String[] findLine(String address, ArrayList<Object> data)
     {
         for (int i = 0; i < data.size(); i++)
         {
