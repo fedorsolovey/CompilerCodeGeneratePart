@@ -29,9 +29,8 @@ public class Main
                 if (subStrings.length == 4)
                 {
                     arrayList.add(j, subStrings);
+                    j++;
                 }
-
-                j++;
             }
 
             nodeItem.createTree(arrayList);

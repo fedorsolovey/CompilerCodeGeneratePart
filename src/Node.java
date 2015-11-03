@@ -29,7 +29,7 @@ public class Node {
     private Node insert(String rootAddress, ArrayList<Object> data)
     {
         String[] current_line = findLine(rootAddress, data);
-        if (current_line != null)
+        if (current_line == null)
             return null;
 
         Node nodeItem = new Node();
@@ -38,9 +38,9 @@ public class Node {
         nodeItem.setRight(null);
         nodeItem.setLeft(null);
 
-        if (current_line[3].equals("0"))
+        if (!current_line[3].equals("0"))
             nodeItem.setRight(insert(current_line[3], data));
-        if (current_line[2].equals("0"))
+        if (!current_line[2].equals("0"))
             nodeItem.setLeft(insert(current_line[2], data));
 
         return nodeItem;
@@ -51,7 +51,7 @@ public class Node {
         for (int i = 0; i < data.size(); i++)
         {
             String[] stringArray = (String []) data.get(i);
-            if (stringArray[0] == address)
+            if (stringArray[0].equals(address))
                 return stringArray;
         }
         return null;
