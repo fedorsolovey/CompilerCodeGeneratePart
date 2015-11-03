@@ -7,9 +7,6 @@ import java.util.regex.Pattern;
 
 public class Main
 {
-
-//    private Node nodeItem;
-
     public static void main(String[] args)
     {
         File file = new File("/home/fedor/Programs/Qt/Projects/build-Syntax-Desktop_Qt_5_5_1_GCC_64bit-Debug/doc.log");
@@ -34,12 +31,12 @@ public class Main
             }
 
             Node nodeItem = Node.createTree(arrayList);
+            nodeItem.traverseTree(Node.TraverseType.INORDER);
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
 
-//        nodeItem.traverseTree(Node.TraverseType.INORDER);
     }
 }

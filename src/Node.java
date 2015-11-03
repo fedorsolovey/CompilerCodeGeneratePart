@@ -4,7 +4,6 @@ import java.util.ArrayList;
  * Created by fedor on 26.10.15.
  */
 public class Node {
-    private Node root;
     private String data;
     private Node left;
     private Node right;
@@ -60,7 +59,7 @@ public class Node {
     // обход
     public void traverseTree(TraverseType traverseType)
     {
-        traverseTree(root, traverseType);
+//        traverseTree(root, traverseType);
         System.out.println();
     }
 
