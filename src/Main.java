@@ -1,5 +1,6 @@
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,15 +18,23 @@ public class Main
         try
         {
             reader = new BufferedReader(new FileReader(file));
+            ArrayList<Object> arrayList = new ArrayList<>();
             String inputString;
+            int j = 0;
 
             while ((inputString = reader.readLine()) != null)
             {
                 String[] subStrings = inputString.split("\t");
 
                 if (subStrings.length == 4)
-                    nodeItem.insert(subStrings);
+                {
+                    arrayList.add(j, subStrings);
+                }
+
+                j++;
             }
+
+            nodeItem.createTree(arrayList);
         }
         catch (Exception e)
         {

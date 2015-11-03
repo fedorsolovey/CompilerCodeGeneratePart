@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Created by fedor on 26.10.15.
  */
@@ -18,27 +20,41 @@ public class Node {
     }
 
     //вставка
-    public void insert(String[] data) {
-        root = insert(root, data);
+    public Node createTree(ArrayList<Object> data)
+    {
+        String[] stringArray = (String[]) data.get(0);
+        return insert(stringArray[0], data);
     }
 
-    private Node insert(Node current, String[] data)
+    private Node insert(String rootAddress, ArrayList<Object> data)
     {
-        if (current == null || (data[3].equals("0") && data[2].equals("0")))
+        String[] current_line = findLine(rootAddress, data);
+        if (current_line != null)
+            return null;
+
+        Node nodeItem = new Node();
+
+        nodeItem.setData(current_line[1]);
+        nodeItem.setRight(null);
+        nodeItem.setLeft(null);
+
+        if (current_line[3].equals("0"))
+            nodeItem.setRight(insert(current_line[3], data));
+        if (current_line[2].equals("0"))
+            nodeItem.setLeft(insert(current_line[2], data));
+
+        return nodeItem;
+    }
+
+    private String[] findLine(String address, ArrayList<Object> data)
+    {
+        for (int i = 0; i < data.size(); i++)
         {
-            current = new Node();
-            current.setData(data[1]);
-            current.setLeft(null);
-            current.setRight(null);
+            String[] stringArray = (String []) data.get(i);
+            if (stringArray[0] == address)
+                return stringArray;
         }
-        else
-        {
-            if (!data[3].equals("0"))
-                current.setRight(insert(current.getRight(), data));
-            if (!data[2].equals("0"))
-                current.setLeft(insert(current.getLeft(), data));
-        }
-        return current;
+        return null;
     }
 
     // обход
