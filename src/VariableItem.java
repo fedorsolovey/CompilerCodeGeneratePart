@@ -3,8 +3,8 @@
  */
 public class VariableItem
 {
-    String typeValue;
-    String initValue;
+    private String typeValue;
+    private String initValue;
 
     public VariableItem(String typeValue, String initValue)
     {
@@ -15,6 +15,10 @@ public class VariableItem
     public VariableItem(String typeValue)
     {
         this.typeValue = typeValue;
-        this.initValue = "0";
+        this.initValue = "?";
+    }
+
+    public String getInitValue() {
+        return initValue;
     }
 }
