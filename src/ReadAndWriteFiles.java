@@ -84,7 +84,10 @@ public class ReadAndWriteFiles
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
             for (String stringItem : outputStrings)
+            {
+                stringItem = stringItem.replaceAll("\\s+", "\t");
                 bufferedWriter.write(stringItem + "\n");
+            }
 
             bufferedWriter.close();
         } catch (Exception e) {

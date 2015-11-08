@@ -40,6 +40,11 @@ public class CodeGenerator
             return;
         }
 
+        if (node.getLeft() != null)
+            this.generateMainBlock(node.getLeft());
+
+        if (node.getRight() != null)
+            this.generateMainBlock(node.getRight());
     }
 
     //генерация присвaивания :=
@@ -47,9 +52,82 @@ public class CodeGenerator
     {
         if (node.getLeft().getRight() != null || node.getRight().getRight() != null)
         {
+            this.generateExpression(node.getRight(), 0);
+            outputStrings.add("MOV " + node.getLeft().getData() + ", AX");
+        }
+        else if (node.getRight().getData().matches("-?\\d+(\\.\\d+)?"))
+            outputStrings.add("MOV " + node.getLeft().getData() + ", " + node.getRight().getData());
+        else
+        {
+            outputStrings.add("MOV AX, " + node.getRight().getData());
+            outputStrings.add("MOV " + node.getLeft().getData() + ", AX");
+        }
+    }
 
+    //генерация выражения
+    private  void generateExpression(Node node, int level)
+    {
+        if (node.getLeft() != null && node.getRight() != null)
+        {
+            this.generateExpression(node.getLeft(), level + 1);
+            this.generateExpression(node.getRight(), level + 1);
+        }
+        else
+        {
+            outputStrings.add("MOV AX, " + node.getData());
+
+            if (level > 0)
+                outputStrings.add("PUSH AX");
         }
 
+        if (node.getData().equals("+"))
+        {
+            outputStrings.add("POP BX");
+            outputStrings.add("POP AX");
+            outputStrings.add("ADD AX, BX");
+
+            if (level > 0)
+                outputStrings.add("PUSH AX");
+        }
+        else if (node.getData().equals("-"))
+        {
+            outputStrings.add("POP BX");
+            outputStrings.add("POP AX");
+            outputStrings.add("SUB AX, BX");
+
+            if (level > 0)
+                outputStrings.add("PUSH AX");
+        }
+        else if (node.getData().equals("*"))
+        {
+            outputStrings.add("POP BX");
+            outputStrings.add("POP AX");
+            outputStrings.add("IMUL AX, BX");
+
+            if (level > 0)
+                outputStrings.add("PUSH AX");
+        }
+        else if (node.getData().equals("/"))
+        {
+            outputStrings.add("POP BX");
+            outputStrings.add("POP AX");
+            outputStrings.add("IDIV AX, BX");
+
+            if (level > 0)
+                outputStrings.add("PUSH AX");
+        }
+        else if (node.getData().equals("xor"))
+        {
+
+        }
+        else if (node.getData().equals("nand"))
+        {
+
+        }
+        else if (node.getData().equals("<") || node.getData().equals(">") || node.getData().equals("<=") || node.getData().equals(">=") || node.getData().equals("<>"))
+        {
+
+        }
     }
 
 }
