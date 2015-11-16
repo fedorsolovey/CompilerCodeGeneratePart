@@ -6,15 +6,14 @@ import java.util.Map;
  */
 public class CodeGenerator
 {
-    private Node nodeItem = new Node();
+//    private Node nodeItem = new Node();
     private ArrayList<String> outputStrings = new ArrayList<String>();
 
     public CodeGenerator(Node nodeItem, Map variablesMapItem)
     {
-        this.nodeItem = nodeItem;
-
         this.generateVarBlock(variablesMapItem);
         this.generateMainBlock(nodeItem);
+        this.generateEndBlock();
     }
 
     public ArrayList<String> getOutputStrings() {
@@ -28,7 +27,7 @@ public class CodeGenerator
             outputStrings.add(itemMap.getKey() + " DW " + itemMap.getValue().getInitValue());
 
         outputStrings.add("\t");
-        outputStrings.add("program_start:");
+        outputStrings.add("program:");
     }
 
     //генерация блока begin ... end.
@@ -37,6 +36,11 @@ public class CodeGenerator
         if (node.getData().equals(":="))
         {
             this.generateAssigment(node);
+            return;
+        }
+        else if (node.getData().equals("if"))
+        {
+            this.generateCompare(node);
             return;
         }
 
@@ -116,7 +120,12 @@ public class CodeGenerator
             if (level > 0)
                 outputStrings.add("PUSH AX");
         }
-        else if (node.getData().equals("xor"))
+        else if (node.getData().equals("<")
+                || node.getData().equals(">")
+                || node.getData().equals("<=")
+                || node.getData().equals(">=")
+                || node.getData().equals("<>")
+                || node.getData().equals("xor"))
         {
 
         }
@@ -124,10 +133,23 @@ public class CodeGenerator
         {
 
         }
-        else if (node.getData().equals("<") || node.getData().equals(">") || node.getData().equals("<=") || node.getData().equals(">=") || node.getData().equals("<>"))
-        {
-
-        }
     }
 
+    //генерация условия перехода (if)
+    private void generateCompare(Node node)
+    {
+
+//        if (node.getLeft() != null)
+//            this.generateMainBlock(node);
+
+    }
+
+    //генераци конца программы
+    private void generateEndBlock()
+    {
+        outputStrings.add("\n");
+        outputStrings.add("MOV AX, 4C00h");
+        outputStrings.add("INT 21h");
+        outputStrings.add("END program");
+    }
 }

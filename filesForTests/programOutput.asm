@@ -1,8 +1,17 @@
 b	DW	?
 c	DW	?
-cA	DW	32
 	
-program_start:
-MOV	c,	8
+program:
+MOV	c,	15
 MOV	AX,	cA
+PUSH	AX
+MOV	AX,	c
+PUSH	AX
+POP	BX
+POP	AX
+IDIV	AX,	BX
 MOV	b,	AX
+	
+MOV	AX,	4C00h
+INT	21h
+END	program

@@ -9,18 +9,20 @@ import java.util.Map;
 public class ReadAndWriteFiles
 {
     //чтение дерева из файла
-    public Node readTreeFile()
+    public static Node readTreeFile()
     {
         File file = new File("/home/fedor/Programs/Qt/Projects/build-Syntax-Desktop_Qt_5_5_1_GCC_64bit-Debug/doc.log");
         BufferedReader reader;
         ArrayList<Object> arrayList = new ArrayList<>();
 
-        try {
+        try
+        {
             reader = new BufferedReader(new FileReader(file));
             String inputString;
             int j = 0;
 
-            while ((inputString = reader.readLine()) != null) {
+            while ((inputString = reader.readLine()) != null)
+            {
                 String[] subStrings = inputString.split("\t");
 
                 if (subStrings.length == 4) {
@@ -37,7 +39,7 @@ public class ReadAndWriteFiles
     }
 
     //чтение Map с переменными из файла
-    public Map readMapFile()
+    public static Map readMapFile()
     {
         File file = new File("/home/fedor/Programs/Qt/Projects/build-Syntax-Desktop_Qt_5_5_1_GCC_64bit-Debug/doc.p.map");
         BufferedReader reader;
@@ -67,7 +69,7 @@ public class ReadAndWriteFiles
     }
 
     //запись в файл asm кода
-    public void writeInFile(ArrayList<String> outputStrings)
+    public static void writeInFile(ArrayList<String> outputStrings)
     {
         File file = new File("filesForTests/programOutput.asm");
 
