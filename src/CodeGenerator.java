@@ -6,8 +6,8 @@ import java.util.Map;
  */
 public class CodeGenerator
 {
-//    private Node nodeItem = new Node();
-    private ArrayList<String> outputStrings = new ArrayList<String>();
+    private ArrayList<String> outputStrings = new ArrayList<String>(); //выходная очередь строк asm кода
+    private int labels; //счетчик меток
 
     public CodeGenerator(Node nodeItem, Map variablesMapItem)
     {
@@ -35,7 +35,7 @@ public class CodeGenerator
     {
         if (node.getData().equals(":="))
         {
-            this.generateAssigment(node);
+            this.generateAssignment(node);
             return;
         }
         else if (node.getData().equals("if"))
@@ -51,8 +51,11 @@ public class CodeGenerator
             this.generateMainBlock(node.getRight());
     }
 
-    //генерация присвaивания :=
-    private void generateAssigment(Node node)
+    /**
+     * генерация присвaивания :=
+     * @param node
+     */
+    private void generateAssignment(Node node)
     {
         if (node.getLeft().getRight() != null || node.getRight().getRight() != null)
         {
@@ -68,8 +71,12 @@ public class CodeGenerator
         }
     }
 
-    //генерация выражения
-    private  void generateExpression(Node node, int level)
+    /**
+     * генерация выражения
+     * @param node
+     * @param level
+     */
+    private void generateExpression(Node node, int level)
     {
         if (node.getLeft() != null && node.getRight() != null)
         {
@@ -80,57 +87,87 @@ public class CodeGenerator
         {
             outputStrings.add("MOV AX, " + node.getData());
 
-            if (level > 0)
-                outputStrings.add("PUSH AX");
+            this.generatePush(level);
         }
 
         if (node.getData().equals("+"))
         {
-            outputStrings.add("POP BX");
-            outputStrings.add("POP AX");
+            this.generatePops();
+
             outputStrings.add("ADD AX, BX");
 
-            if (level > 0)
-                outputStrings.add("PUSH AX");
+            this.generatePush(level);
         }
         else if (node.getData().equals("-"))
         {
-            outputStrings.add("POP BX");
-            outputStrings.add("POP AX");
+            this.generatePops();
+
             outputStrings.add("SUB AX, BX");
 
-            if (level > 0)
-                outputStrings.add("PUSH AX");
+            this.generatePush(level);
         }
         else if (node.getData().equals("*"))
         {
-            outputStrings.add("POP BX");
-            outputStrings.add("POP AX");
+            this.generatePops();
+
             outputStrings.add("IMUL AX, BX");
 
-            if (level > 0)
-                outputStrings.add("PUSH AX");
+            this.generatePush(level);
         }
         else if (node.getData().equals("/"))
         {
-            outputStrings.add("POP BX");
-            outputStrings.add("POP AX");
+            this.generatePops();
+
             outputStrings.add("IDIV AX, BX");
 
-            if (level > 0)
-                outputStrings.add("PUSH AX");
+            this.generatePush(level);
         }
         else if (node.getData().equals("<")
                 || node.getData().equals(">")
                 || node.getData().equals("<=")
                 || node.getData().equals(">=")
                 || node.getData().equals("<>")
-                || node.getData().equals("xor"))
+                || node.getData().equals("=="))
         {
+            int label1 = labels;
+            labels++;
+            int label2 = labels;
+            labels++;
 
+            this.generatePops();
+
+            outputStrings.add(" CMP AX, BX");
+
+            if (node.getData().equals("<"))
+                outputStrings.add(" JL m" + label1);
+            else if (node.getData().equals("<="))
+                outputStrings.add(" JLE m" + label1);
+            else if (node.getData().equals("=="))
+                outputStrings.add(" JE m" + label1);
+            else if (node.getData().equals("<>"))
+                outputStrings.add(" JNZ m" + label1);
+            else if (node.getData().equals(">"))
+                outputStrings.add(" JG m" + label1);
+            else if (node.getData().equals(">="))
+                outputStrings.add(" JGE m" + label1);
+
+            outputStrings.add(" XOR AX, AX");
+            outputStrings.add(" JMP m" + label2);
+            outputStrings.add("m" + label1 + ": MOV AX, 1");
+            outputStrings.add("m" + label2 + ":");
+
+            this.generatePush(level);
         }
         else if (node.getData().equals("nand"))
         {
+
+
+
+        }
+        else if (node.getData().equals("xor"))
+        {
+
+
 
         }
     }
@@ -138,10 +175,28 @@ public class CodeGenerator
     //генерация условия перехода (if)
     private void generateCompare(Node node)
     {
+        int label1 = labels;
+        labels++;
+        int label2 = labels;
+        labels++;
+    
+        if (node.getLeft() != null)
+            this.generateExpression(node.getLeft(), 0);
+            
+        outputStrings.add(" CMP AX, 0");
+        outputStrings.add(" JZ m" + label1);
+        node = node.getRight();
 
-//        if (node.getLeft() != null)
-//            this.generateMainBlock(node);
+        if (node.getLeft() != null)
+            this.generateMainBlock(node.getLeft());
 
+        outputStrings.add(" JMP m" + label2);
+        outputStrings.add("m" + label1 + ":");
+
+        if (node.getRight() != null)
+            this.generateMainBlock(node.getRight());
+
+        outputStrings.add("m" + label2 + ":");
     }
 
     //генераци конца программы
@@ -151,5 +206,24 @@ public class CodeGenerator
         outputStrings.add("MOV AX, 4C00h");
         outputStrings.add("INT 21h");
         outputStrings.add("END program");
+    }
+
+    /**
+     * Генерация извлечения из стэка
+     */
+    private void generatePops()
+    {
+        outputStrings.add("POP BX");
+        outputStrings.add("POP AX");
+    }
+
+    /**
+     * Генерация занесения в стэка
+     * @param level
+     */
+    private void generatePush(int level)
+    {
+        if (level > 0)
+            outputStrings.add("PUSH AX");
     }
 }
