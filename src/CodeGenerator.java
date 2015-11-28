@@ -9,9 +9,9 @@ public class CodeGenerator
     private ArrayList<String> outputStrings = new ArrayList<String>(); //выходная очередь строк asm кода
     private int labels; //счетчик меток
 
-    public CodeGenerator(Node nodeItem, Map variablesMapItem)
+    public CodeGenerator(Node nodeItem)
     {
-        this.generateVarBlock(variablesMapItem);
+        this.generateVarBlock(nodeItem);
         this.generateMainBlock(nodeItem);
         this.generateEndBlock();
     }
@@ -20,14 +20,24 @@ public class CodeGenerator
         return outputStrings;
     }
 
-    //генерация блока Var
-    private void generateVarBlock(Map<String, VariableItem> variablesMapItem)
+    private void generateVarBlock(Node node)
     {
-        for(Map.Entry<String, VariableItem> itemMap : variablesMapItem.entrySet())
-            outputStrings.add(itemMap.getKey() + " DW " + itemMap.getValue().getInitValue());
+        if (node.getLeft() != null && node.getLeft().getData().equals("var"))
+        {
+            if (node.getLeft().getRight() != null)
+                outputStrings.add(node.getLeft().getLeft().getData() + " DW " + node.getLeft().getRight().getData());
+            else
+                outputStrings.add(node.getLeft().getLeft().getData() + " DW ?");
+        }
+        else if (node.getData().equals("begin"))
+        {
+            outputStrings.add("\t");
+            outputStrings.add("program:");
+            return;
+        }
 
-        outputStrings.add("\t");
-        outputStrings.add("program:");
+        if (node.getRight() != null)
+            this.generateVarBlock(node.getRight());
     }
 
     //генерация блока begin ... end.
@@ -160,15 +170,20 @@ public class CodeGenerator
         }
         else if (node.getData().equals("nand"))
         {
+            this.generatePops();
 
+            outputStrings.add(" NOT BX");
+            outputStrings.add(" AND AX, BX");
 
-
+            this.generatePush(level);
         }
         else if (node.getData().equals("xor"))
         {
+            this.generatePops();
 
+            outputStrings.add("XOR AX, BX");
 
-
+            this.generatePush(level);
         }
     }
 

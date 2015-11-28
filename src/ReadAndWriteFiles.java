@@ -38,36 +38,6 @@ public class ReadAndWriteFiles
         return Node.createTree(arrayList);
     }
 
-    //чтение Map с переменными из файла
-    public static Map readMapFile()
-    {
-        File file = new File("/home/fedor/Programs/Qt/Projects/build-Syntax-Desktop_Qt_5_5_1_GCC_64bit-Debug/doc.p.map");
-        BufferedReader reader;
-        Map mapItem = new HashMap<String, VariableItem>();
-
-        try
-        {
-            reader = new BufferedReader(new FileReader(file));
-            String inputString;
-
-            while ((inputString = reader.readLine()) != null)
-            {
-                String[] subStrings = inputString.split(" ");
-
-                if (subStrings.length == 2)
-                    mapItem.put(subStrings[0], new VariableItem(subStrings[1]));
-                else if (subStrings.length == 3)
-                    mapItem.put(subStrings[0], new VariableItem(subStrings[1], subStrings[2]));
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        return mapItem;
-    }
-
     //запись в файл asm кода
     public static void writeInFile(ArrayList<String> outputStrings)
     {
