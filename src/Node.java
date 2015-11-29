@@ -47,9 +47,9 @@ public class Node {
 
     private static String[] findLine(String address, ArrayList<Object> data)
     {
-        for (int i = 0; i < data.size(); i++)
+        for (Object aData : data)
         {
-            String[] stringArray = (String []) data.get(i);
+            String[] stringArray = (String[]) aData;
             if (stringArray[0].equals(address))
                 return stringArray;
         }
@@ -69,6 +69,7 @@ public class Node {
             return;
         switch (traverseType) {
             case INORDER:
+
                 traverseTree(current.getLeft(), traverseType);
                 System.out.println(current.getData());
                 traverseTree(current.getRight(), traverseType);

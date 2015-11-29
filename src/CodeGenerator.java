@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Created by fedor on 04.11.15.
@@ -11,6 +10,7 @@ public class CodeGenerator
 
     public CodeGenerator(Node nodeItem)
     {
+        this.generateTopBlock();
         this.generateVarBlock(nodeItem);
         this.generateMainBlock(nodeItem);
         this.generateEndBlock();
@@ -18,6 +18,13 @@ public class CodeGenerator
 
     public ArrayList<String> getOutputStrings() {
         return outputStrings;
+    }
+
+    private void generateTopBlock()
+    {
+        outputStrings.add(".MODEL SMALL");
+        outputStrings.add(".STACK 256");
+        outputStrings.add(".DATA");
     }
 
     private void generateVarBlock(Node node)
@@ -31,8 +38,11 @@ public class CodeGenerator
         }
         else if (node.getData().equals("begin"))
         {
+            outputStrings.add(".CODE");
             outputStrings.add("\t");
             outputStrings.add("program:");
+            outputStrings.add("MOV AX, @data");
+            outputStrings.add("MOV DS, AX");
             return;
         }
 
