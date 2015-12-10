@@ -1,7 +1,7 @@
+package com.fedor.compiler;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
 
 /**
  * Created by fedor on 08.11.15.
@@ -11,7 +11,7 @@ public class ReadAndWriteFiles
     //чтение дерева из файла
     public static Node readTreeFile()
     {
-        File file = new File("/home/fedor/Programs/Qt/Projects/build-Syntax-Desktop_Qt_5_5_1_GCC_64bit-Debug/doc.log");
+        File file = new File("code.log");
         BufferedReader reader;
         ArrayList<Object> arrayList = new ArrayList<>();
 
@@ -41,7 +41,7 @@ public class ReadAndWriteFiles
     //запись в файл asm кода
     public static void writeInFile(ArrayList<String> outputStrings)
     {
-        File file = new File("filesForTests/programOutput.asm");
+        File file = new File("program.asm");
 
         if (!file.exists()) {
             try {

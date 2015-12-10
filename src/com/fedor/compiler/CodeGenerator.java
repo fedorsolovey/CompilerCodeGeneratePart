@@ -1,3 +1,5 @@
+package com.fedor.compiler;
+
 import java.util.ArrayList;
 
 /**
@@ -10,6 +12,7 @@ public class CodeGenerator
 
     public CodeGenerator(Node nodeItem)
     {
+        labels = 0;
         this.generateTopBlock();
         this.generateVarBlock(nodeItem);
         this.generateMainBlock(nodeItem);
@@ -147,7 +150,8 @@ public class CodeGenerator
                 || node.getData().equals("<=")
                 || node.getData().equals(">=")
                 || node.getData().equals("<>")
-                || node.getData().equals("=="))
+                || node.getData().equals("==")
+                || node.getData().equals("xor"))
         {
             int label1 = labels;
             labels++;
@@ -156,7 +160,7 @@ public class CodeGenerator
 
             this.generatePops();
 
-            outputStrings.add(" CMP AX, BX");
+            outputStrings.add("CMP AX, BX");
 
             if (node.getData().equals("<"))
                 outputStrings.add(" JL m" + label1);
@@ -164,7 +168,7 @@ public class CodeGenerator
                 outputStrings.add(" JLE m" + label1);
             else if (node.getData().equals("=="))
                 outputStrings.add(" JE m" + label1);
-            else if (node.getData().equals("<>"))
+            else if (node.getData().equals("<>") || node.getData().equals("xor"))
                 outputStrings.add(" JNZ m" + label1);
             else if (node.getData().equals(">"))
                 outputStrings.add(" JG m" + label1);
@@ -189,11 +193,11 @@ public class CodeGenerator
         }
         else if (node.getData().equals("xor"))
         {
-            this.generatePops();
-
-            outputStrings.add("XOR AX, BX");
-
-            this.generatePush(level);
+//            this.generatePops();
+//
+//            outputStrings.add("XOR AX, BX");
+//
+//            this.generatePush(level);
         }
     }
 
@@ -208,14 +212,14 @@ public class CodeGenerator
         if (node.getLeft() != null)
             this.generateExpression(node.getLeft(), 0);
             
-        outputStrings.add(" CMP AX, 0");
-        outputStrings.add(" JZ m" + label1);
+        outputStrings.add("CMP AX, 0");
+        outputStrings.add("JZ m" + label1);
         node = node.getRight();
 
         if (node.getLeft() != null)
             this.generateMainBlock(node.getLeft());
 
-        outputStrings.add(" JMP m" + label2);
+        outputStrings.add("JMP m" + label2);
         outputStrings.add("m" + label1 + ":");
 
         if (node.getRight() != null)
