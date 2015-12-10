@@ -175,8 +175,8 @@ public class CodeGenerator
             else if (node.getData().equals(">="))
                 outputStrings.add(" JGE m" + label1);
 
-            outputStrings.add(" XOR AX, AX");
-            outputStrings.add(" JMP m" + label2);
+            outputStrings.add("XOR AX, AX");
+            outputStrings.add("JMP m" + label2);
             outputStrings.add("m" + label1 + ": MOV AX, 1");
             outputStrings.add("m" + label2 + ":");
 
@@ -184,20 +184,21 @@ public class CodeGenerator
         }
         else if (node.getData().equals("nand"))
         {
+            int label1 = labels;
+            labels++;
+            int label2 = labels;
+            labels++;
+
             this.generatePops();
 
-            outputStrings.add(" NOT BX");
-            outputStrings.add(" AND AX, BX");
+            outputStrings.add("CMP AX, 0");
+            outputStrings.add("JNE m" + label1 + ":");
+            outputStrings.add("CMP BX, 0");
+            outputStrings.add("JE m" + label2 + ":");
+            outputStrings.add("m" + label1 + ": CMP AX, BX");
+            outputStrings.add("JNE m" + label2 + ":");
 
             this.generatePush(level);
-        }
-        else if (node.getData().equals("xor"))
-        {
-//            this.generatePops();
-//
-//            outputStrings.add("XOR AX, BX");
-//
-//            this.generatePush(level);
         }
     }
 
