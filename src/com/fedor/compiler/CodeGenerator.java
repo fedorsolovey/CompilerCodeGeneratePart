@@ -153,10 +153,8 @@ public class CodeGenerator
                 || node.getData().equals("==")
                 || node.getData().equals("xor"))
         {
-            int label1 = labels;
-            labels++;
-            int label2 = labels;
-            labels++;
+            int label1 = labels++;
+            int label2 = labels++;
 
             this.generatePops();
 
@@ -184,35 +182,36 @@ public class CodeGenerator
         }
         else if (node.getData().equals("nand"))
         {
-            int label1 = labels;
-            labels++;
-            int label2 = labels;
-            labels++;
+            int label1 = labels++;
+            int label2 = labels++;
+            int label3 = labels++;
 
-            this.generatePops();
+            generatePops();
 
             outputStrings.add("CMP AX, 0");
-            outputStrings.add("JNE m" + label1 + ":");
+            outputStrings.add("JNE m" + label1);
             outputStrings.add("CMP BX, 0");
-            outputStrings.add("JE m" + label2 + ":");
+            outputStrings.add("JE m" + label2);
             outputStrings.add("m" + label1 + ": CMP AX, BX");
-            outputStrings.add("JNE m" + label2 + ":");
+            outputStrings.add("JNE m" + label2);
+            outputStrings.add("XOR AX,AX");
+            outputStrings.add("JMP m" + label3);
+            outputStrings.add("m" + label2 + ": MOV AX,1");
+            outputStrings.add("m" + label3+ ":");
 
-            this.generatePush(level);
+            generatePush(level);
         }
     }
 
     //генерация условия перехода (if)
     private void generateCompare(Node node)
     {
-        int label1 = labels;
-        labels++;
-        int label2 = labels;
-        labels++;
-    
+        int label1 = labels++;
+        int label2 = labels++;
+
         if (node.getLeft() != null)
             this.generateExpression(node.getLeft(), 0);
-            
+
         outputStrings.add("CMP AX, 0");
         outputStrings.add("JZ m" + label1);
         node = node.getRight();

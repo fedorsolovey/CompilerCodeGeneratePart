@@ -15,7 +15,6 @@ public class Main
             Runtime rt = Runtime.getRuntime();
             Process pr = rt.exec(cmd);
 
-// retrieve output from python script
             BufferedReader bfr = new BufferedReader(new InputStreamReader(pr.getInputStream()));
 
             System.out.println("Лексический анализатор");
@@ -25,6 +24,8 @@ public class Main
         }
 
         try {
+            System.out.println("Синтаксический анализатор");
+
             Runtime rt = Runtime.getRuntime();
             Process pr = rt.exec("./syntax.sh");
 
@@ -34,24 +35,20 @@ public class Main
             {
                 System.out.println(line);
             }
-            System.out.println("Начата 2");
-
-
-
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
         File f = new File("code.log");
-        if(f.exists() && !f.isDirectory()) {
+        if (f.exists() && !f.isDirectory()) {
             System.out.println("Начата кодогенерация");
             CodeGenerator codeGenerator = new CodeGenerator(ReadAndWriteFiles.readTreeFile());
             System.out.println("Закончена кодогенерация");
 
             System.out.println("Начата запись в файл");
             ReadAndWriteFiles.writeInFile(codeGenerator.getOutputStrings());
-            System.out.println("Закончена кодогенерация");
+            System.out.println("Закончена запись в файл");
         }
 
     }
