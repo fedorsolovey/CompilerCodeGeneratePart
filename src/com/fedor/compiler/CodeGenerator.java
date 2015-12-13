@@ -39,6 +39,13 @@ public class CodeGenerator
             else
                 outputStrings.add(node.getLeft().getLeft().getData() + " DW ?");
         }
+        else if (node.getLeft() != null && node.getData().equals("var"))
+        {
+            if (node.getLeft().getRight() != null)
+                outputStrings.add(node.getLeft().getData() + " DW " + node.getRight().getData());
+            else
+                outputStrings.add(node.getLeft().getData() + " DW ?");
+        }
         else if (node.getData().equals("begin"))
         {
             outputStrings.add(".CODE");
